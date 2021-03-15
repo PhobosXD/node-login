@@ -6,6 +6,28 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 3030;
 
+function verifyJwt(req, res, next) {
+    const token = req.headers['token'];
+    if (!token) {
+        return res.status(401).json({
+            auth: false,
+            message: 'Nenhum token providenciado!'
+        });
+    }
+
+    jwt.verify(token, process.env.SECRET, (error, decoded) => {
+        if (error) {
+            return res.status(500).json({
+                auth: false,
+                message: 'Falha na autenticação de usuário!'
+            });
+        }
+
+        req.userId = decoded.id;
+        next();
+    });
+}
+
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
@@ -16,7 +38,7 @@ app.get('/', (req, res) => {
     }
 });
 
-app.get('/clientes', (req, res) => {
+app.get('/clientes', verifyJwt, (req, res) => {
     try {
         res.json([{id: 1, nome: 'Cazuza'}]);
         console.log('[*]Retornou todos os clientes!');
@@ -26,9 +48,6 @@ app.get('/clientes', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    //user = req.body.user;
-    //password = req.body.password;
-
     if (req.body.user == 'cazuza' && req.body.password == 'teste') {
         try {
             const id = 1;
@@ -39,10 +58,10 @@ app.post('/login', (req, res) => {
         } catch (error) {
             console.log(error);
         }
-    } else {
-        console.log('[*]Login fail!');
-        res.status(500).json({message: 'Login inválido!'});
     }
+    
+    console.log('[*]Login fail!');
+    res.status(500).json({message: 'Login inválido!'});
 });
 
 app.post('/logout', (req, res) => {
