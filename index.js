@@ -45,6 +45,10 @@ app.post('/login', (req, res) => {
     }
 });
 
+app.post('/logout', (req, res) => {
+    res.json({auth: false, token: null});
+});
+
 const server = http.createServer(app);
 server.listen(port);
 console.log('[*]Escutando na porta ' + port + '!');
