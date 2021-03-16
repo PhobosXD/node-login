@@ -6,10 +6,12 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 3030;
 const clientes = require('./routes/Clientes');
+const login = require('./routes/Login');
 
 app.use(bodyParser.json());
 
 clientes(app);
+login(app);
 
 app.get('/', (req, res) => {
     try {
