@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const login = (app) => {
     app.route('/login')
     .post((req, res) => {
