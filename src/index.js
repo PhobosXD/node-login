@@ -19,23 +19,6 @@ app.get('/', (req, res) => {
     }
 });
 
-app.post('/login', (req, res) => {
-    if (req.body.user == 'cazuza' && req.body.password == 'teste') {
-        try {
-            const id = 1;
-            const token = jwt.sign({id}, process.env.SECRET, {expiresIn: 300});
-
-            console.log('[*]Login sucess!');
-            return res.json({auth: true, token: token});
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    
-    console.log('[*]Login fail!');
-    res.status(500).json({message: 'Login inválido!'});
-});
-
 app.post('/logout', (req, res) => {
     res.json({auth: false, token: null});
 });
