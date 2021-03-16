@@ -5,43 +5,15 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const port = 3030;
-
-function verifyJwt(req, res, next) {
-    const token = req.headers['token'];
-    if (!token) {
-        return res.status(401).json({
-            auth: false,
-            message: 'Nenhum token providenciado!'
-        });
-    }
-
-    jwt.verify(token, process.env.SECRET, (error, decoded) => {
-        if (error) {
-            return res.status(500).json({
-                auth: false,
-                message: 'Falha na autenticação de usuário!'
-            });
-        }
-
-        req.userId = decoded.id;
-        next();
-    });
-}
+const clientes = require('./routes/Clientes');
 
 app.use(bodyParser.json());
+
+clientes(app);
 
 app.get('/', (req, res) => {
     try {
         res.json({message: 'Tudo certo!'});
-    } catch (error) {
-        console.log(error);
-    }
-});
-
-app.get('/clientes', verifyJwt, (req, res) => {
-    try {
-        res.json([{id: 1, nome: 'Cazuza'}]);
-        console.log('[*]Retornou todos os clientes!');
     } catch (error) {
         console.log(error);
     }
