@@ -7,11 +7,13 @@ const bodyParser = require('body-parser');
 const port = 3030;
 const clientes = require('./routes/Clientes');
 const login = require('./routes/Login');
+const logout = require('./routes/Logout');
 
 app.use(bodyParser.json());
 
 clientes(app);
 login(app);
+logout(app);
 
 app.get('/', (req, res) => {
     try {
@@ -19,10 +21,6 @@ app.get('/', (req, res) => {
     } catch (error) {
         console.log(error);
     }
-});
-
-app.post('/logout', (req, res) => {
-    res.json({auth: false, token: null});
 });
 
 const server = http.createServer(app);
